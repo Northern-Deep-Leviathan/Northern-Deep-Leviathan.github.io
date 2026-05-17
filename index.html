@@ -8,7 +8,9 @@
   <meta property="og:title" content="AuroWork — Open Source Desktop AI Agent">
   <meta property="og:description" content="The desktop app that lets you use 50+ LLMs, bring your own keys, and share setups seamlessly.">
   <meta property="og:type" content="website">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M16 3C12.5 8 7 14 7 20a9 9 0 0 0 18 0c0-6-5.5-12-9-17Z' fill='%23C4745B' opacity='0.18'/><path d='M16 7C13.5 11 10 15.5 10 20a6 6 0 0 0 12 0c0-4.5-3.5-9-6-13Z' fill='%23C4745B' opacity='0.45'/><path d='M16 12C14.5 14.5 13 17 13 20a3 3 0 0 0 6 0c0-3-1.5-5.5-3-8Z' fill='%23C4745B'/></svg>">
+  <link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
+  <link rel="icon" type="image/png" sizes="256x256" href="icon-256.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -142,7 +144,13 @@
       text-decoration: none;
       color: var(--ink);
     }
-    .nav-logo svg { width: 30px; height: 30px; }
+    .nav-logo svg,
+    .nav-logo img {
+      width: 30px;
+      height: 30px;
+      display: block;
+      border-radius: 6px;
+    }
     .nav-logo span {
       font-size: 1.2rem;
       font-weight: 600;
@@ -925,11 +933,7 @@
   <nav id="navbar">
     <div class="container nav-inner">
       <a href="#" class="nav-logo">
-        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M16 3C12.5 8 7 14 7 20a9 9 0 0 0 18 0c0-6-5.5-12-9-17Z" fill="#C4745B" opacity="0.18"/>
-          <path d="M16 7C13.5 11 10 15.5 10 20a6 6 0 0 0 12 0c0-4.5-3.5-9-6-13Z" fill="#C4745B" opacity="0.45"/>
-          <path d="M16 12C14.5 14.5 13 17 13 20a3 3 0 0 0 6 0c0-3-1.5-5.5-3-8Z" fill="#C4745B"/>
-        </svg>
+        <img src="icon-256.png" alt="AuroWork" width="30" height="30" decoding="async">
         <span>AuroWork</span>
       </a>
 
