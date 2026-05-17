@@ -952,9 +952,14 @@
       <h1 class="animate-fade-up delay-1">The open source desktop<br>AI agent for your team</h1>
       <p class="animate-fade-up delay-2">Use 50+ LLMs, bring your own keys, and share setups seamlessly with your team. No CLI fluency needed.</p>
       <div class="hero-ctas animate-fade-up delay-3">
-        <a href="https://github.com/Northern-Deep-Leviathan/aurowork/releases/download/v0.0.2/AuroWork_0.11.193_x64_en-US.msi" class="btn-primary">
+        <a
+          id="download-btn"
+          href="https://github.com/Northern-Deep-Leviathan/aurowork/releases/latest"
+          class="btn-primary"
+          data-fallback="https://github.com/Northern-Deep-Leviathan/aurowork/releases/latest"
+        >
           <i data-lucide="download"></i>
-          Download Preview
+          <span id="download-btn-label">Download Preview</span>
         </a>
       </div>
       <p class="hero-platforms animate-fade-up delay-4">Available for Windows</p>
@@ -1172,6 +1177,54 @@
     }, { threshold: 0.1, rootMargin: '-40px 0px' });
 
     revealElements.forEach(el => revealObserver.observe(el));
+  </script>
+
+  <!-- ===== Resolve latest download from GitHub Releases API ===== -->
+  <!--
+    We can't fetch /releases/latest/download/latest.json directly from the
+    browser: GitHub's release-assets CDN does not return CORS headers, so
+    the response is unreadable from JS. api.github.com does send
+    Access-Control-Allow-Origin: *, so we use it instead.
+
+    Rate limit for unauthenticated calls is 60/hour per IP, which is plenty
+    for a static marketing page. If the call fails for any reason (network,
+    rate limit, missing asset), the button falls back to its static
+    /releases/latest href set in HTML.
+  -->
+  <script>
+    (async () => {
+      const btn = document.getElementById('download-btn');
+      const label = document.getElementById('download-btn-label');
+      if (!btn) return;
+
+      const API_URL =
+        'https://api.github.com/repos/Northern-Deep-Leviathan/aurowork/releases/latest';
+
+      try {
+        const res = await fetch(API_URL, {
+          headers: { Accept: 'application/vnd.github+json' },
+        });
+        if (!res.ok) throw new Error('api ' + res.status);
+        const release = await res.json();
+
+        const assets = Array.isArray(release.assets) ? release.assets : [];
+        // Prefer the Windows MSI; fall back to NSIS installer if present.
+        const msi = assets.find((a) => /\.msi$/i.test(a.name));
+        const exe = assets.find((a) => /-setup\.exe$/i.test(a.name));
+        const target = msi || exe;
+        if (!target || !target.browser_download_url) {
+          throw new Error('no windows installer in release');
+        }
+
+        btn.href = target.browser_download_url;
+        const version = String(release.tag_name || '').replace(/^v/, '');
+        if (label && version) {
+          label.textContent = 'Download v' + version;
+        }
+      } catch (_) {
+        // Leave the fallback href (/releases/latest) untouched.
+      }
+    })();
   </script>
 </body>
 </html>
